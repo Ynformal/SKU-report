@@ -3,6 +3,10 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import io
 
+# Load external CSS file from the main folder
+with open('style.css') as f:
+    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
 @st.cache_data
 def load_data(file):
     try:
