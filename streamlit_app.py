@@ -6,8 +6,8 @@ import io
 @st.cache_data
 def load_data(file):
     try:
-        # Read CSV from file-like object
-        data = pd.read_csv(io.StringIO(file.getvalue().decode('utf-8')))
+        # Read CSV from file-like object with semicolon delimiter
+        data = pd.read_csv(io.StringIO(file.getvalue().decode('utf-8')), delimiter=';')
         
         # Strip any leading/trailing whitespace from column names
         data.columns = data.columns.str.strip()
@@ -23,7 +23,7 @@ def load_data(file):
         return data
     except UnicodeDecodeError:
         # Fallback if the file isn't UTF-8 encoded
-        data = pd.read_csv(io.StringIO(file.getvalue().decode('latin1')))
+        data = pd.read_csv(io.StringIO(file.getvalue().decode('latin1')), delimiter=';')
         data.columns = data.columns.str.strip()
         data['date'] = pd.to_datetime(data['date'], format='%d.%m.%Y')
         return data
