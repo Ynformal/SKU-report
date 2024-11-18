@@ -3,33 +3,6 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import io
 
-# Sample DataFrame for illustration
-# Replace this with your actual data loaded from CSV
-data = pd.DataFrame({
-    'date': pd.date_range(start="2024-01-01", periods=30, freq='D'),
-    'cost': [i * 10 for i in range(30)],
-    'NB2Bs': [i * 5 for i in range(30)],
-    'nB2B CPA': [i * 2 for i in range(30)]
-})
-
-# Ensure 'date' is the index if needed for the line chart
-data.set_index('date', inplace=True)
-
-# Use Streamlit's line_chart method to plot the data
-st.title("SKU Performance Line Chart")
-
-# Customize line chart for daily trends
-st.line_chart(
-    data,  # Automatically uses the 'date' index as the x-axis
-    y=["cost", "NB2Bs", "nB2B CPA"],  # Define columns for y-axis
-    color=["#1f77b4", "#ff7f0e", "#2ca02c"],  # Set specific colors for each line
-    use_container_width=True  # Make sure it fits the container width
-)
-
-# Load external CSS file from the main folder
-with open('style.css') as f:
-    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-
 @st.cache_data
 def load_data(file):
     try:
@@ -38,9 +11,6 @@ def load_data(file):
         
         # Strip any leading/trailing whitespace from column names
         data.columns = data.columns.str.strip()
-
-        # Debugging: Print the column names to check for discrepancies
-        st.write("Columns in the uploaded file:", data.columns)
 
         # Ensure 'date' column is present
         if 'date' not in data.columns:
@@ -63,7 +33,7 @@ def load_data(file):
     except Exception as e:
         st.error(f"An error occurred while processing the file: {str(e)}")
         return None  # Return None to prevent further processing if there was an error
-        
+
 # Main Streamlit app
 def main():
     st.title("Google Ads SKU Performance Dashboard")
