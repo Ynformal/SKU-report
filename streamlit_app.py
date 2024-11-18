@@ -20,8 +20,7 @@ st.title("SKU Performance Line Chart")
 
 # Customize line chart
 st.line_chart(
-    data,
-    x=data.index,  # Use 'date' column for x-axis
+    data,  # Automatically uses the 'date' index as the x-axis
     y=["cost", "NB2Bs", "nB2B CPA"],  # Define columns for y-axis
     color=["#1f77b4", "#ff7f0e", "#2ca02c"],  # Set specific colors for each line
     use_container_width=True  # Make sure it fits the container width
