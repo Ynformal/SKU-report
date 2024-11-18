@@ -8,11 +8,22 @@ def load_data(file):
     try:
         # Read CSV from file-like object
         data = pd.read_csv(io.StringIO(file.getvalue().decode('utf-8')))
+        
+        # Ensure 'date' column is present
+        if 'date' not in data.columns:
+            raise ValueError("The 'date' column is missing from the CSV file.")
+        
+        # Convert 'date' column to datetime, specifying the format for DD.MM.YYYY
+        data['date'] = pd.to_datetime(data['date'], format='%d.%m.%Y')
+        
+        return data
     except UnicodeDecodeError:
         # Fallback if the file isn't UTF-8 encoded
         data = pd.read_csv(io.StringIO(file.getvalue().decode('latin1')))
-    data['date'] = pd.to_datetime(data['date'])
-    return data
+        data['date'] = pd.to_datetime(data['date'], format='%d.%m.%Y')
+        return data
+    except Exception as e:
+        st.error(f"An error occurred while processing the file: {str(e)}")
 
 # Main Streamlit app
 def main():
