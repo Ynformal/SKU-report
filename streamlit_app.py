@@ -12,10 +12,16 @@ def load_data(file):
         # Strip any leading/trailing whitespace from column names
         data.columns = data.columns.str.strip()
 
+        # Debugging: Print the column names to check for discrepancies
+        st.write("Columns in the uploaded file:", data.columns)
+
         # Ensure 'date' column is present
         if 'date' not in data.columns:
-            st.write("Columns in the uploaded file:", data.columns)  # Show column names for debugging
             raise ValueError("The 'date' column is missing from the CSV file.")
+        
+        # Ensure 'cost' column is present
+        if 'cost' not in data.columns:
+            raise ValueError("The 'cost' column is missing from the CSV file.")
         
         # Convert 'date' column to datetime, with updated format for DD-MM-YY
         data['date'] = pd.to_datetime(data['date'], format='%d-%m-%y', dayfirst=True)
