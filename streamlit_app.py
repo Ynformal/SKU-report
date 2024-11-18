@@ -17,20 +17,20 @@ def load_data(file):
             st.write("Columns in the uploaded file:", data.columns)  # Show column names for debugging
             raise ValueError("The 'date' column is missing from the CSV file.")
         
-        # Convert 'date' column to datetime, specifying the format for DD.MM.YYYY
-        data['date'] = pd.to_datetime(data['date'], format='%d.%m.%Y')
+        # Convert 'date' column to datetime, with updated format for DD-MM-YY
+        data['date'] = pd.to_datetime(data['date'], format='%d-%m-%y', dayfirst=True)
         
         return data
     except UnicodeDecodeError:
         # Fallback if the file isn't UTF-8 encoded
         data = pd.read_csv(io.StringIO(file.getvalue().decode('latin1')), delimiter=';')
         data.columns = data.columns.str.strip()
-        data['date'] = pd.to_datetime(data['date'], format='%d.%m.%Y')
+        data['date'] = pd.to_datetime(data['date'], format='%d-%m-%y', dayfirst=True)
         return data
     except Exception as e:
         st.error(f"An error occurred while processing the file: {str(e)}")
         return None  # Return None to prevent further processing if there was an error
-
+        
 # Main Streamlit app
 def main():
     st.title("Google Ads SKU Performance Dashboard")
