@@ -24,6 +24,7 @@ def load_data(file):
         return data
     except Exception as e:
         st.error(f"An error occurred while processing the file: {str(e)}")
+        return None  # Return None to prevent further processing if there was an error
 
 # Main Streamlit app
 def main():
@@ -35,10 +36,15 @@ def main():
         # Load the data
         data = load_data(uploaded_file)
 
+        # Ensure data was loaded correctly
+        if data is None:
+            return
+        
         # Ensure required columns exist
         required_columns = {'date', 'SKU', 'cost', 'NB2Bs', 'nB2B CPA'}
-        if not required_columns.issubset(data.columns):
-            st.error(f"The uploaded file must contain the following columns: {required_columns}")
+        missing_columns = required_columns - set(data.columns)
+        if missing_columns:
+            st.error(f"The uploaded file must contain the following columns: {', '.join(missing_columns)}")
             return
         
         # Sidebar filters
@@ -59,8 +65,8 @@ def main():
         )
         
         # Filter data based on SKU and date range
-        filtered_data = data[
-            (data['SKU'] == selected_sku) &
+        filtered_data = data[(
+            data['SKU'] == selected_sku) &
             (data['date'] >= pd.Timestamp(start_date)) &
             (data['date'] <= pd.Timestamp(end_date))
         ]
