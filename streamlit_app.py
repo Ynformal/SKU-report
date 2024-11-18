@@ -9,8 +9,12 @@ def load_data(file):
         # Read CSV from file-like object
         data = pd.read_csv(io.StringIO(file.getvalue().decode('utf-8')))
         
+        # Strip any leading/trailing whitespace from column names
+        data.columns = data.columns.str.strip()
+
         # Ensure 'date' column is present
         if 'date' not in data.columns:
+            st.write("Columns in the uploaded file:", data.columns)  # Show column names for debugging
             raise ValueError("The 'date' column is missing from the CSV file.")
         
         # Convert 'date' column to datetime, specifying the format for DD.MM.YYYY
@@ -20,6 +24,7 @@ def load_data(file):
     except UnicodeDecodeError:
         # Fallback if the file isn't UTF-8 encoded
         data = pd.read_csv(io.StringIO(file.getvalue().decode('latin1')))
+        data.columns = data.columns.str.strip()
         data['date'] = pd.to_datetime(data['date'], format='%d.%m.%Y')
         return data
     except Exception as e:
