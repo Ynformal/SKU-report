@@ -1,6 +1,5 @@
 import pandas as pd
 import streamlit as st
-import matplotlib.pyplot as plt
 import io
 
 @st.cache_data
@@ -83,20 +82,14 @@ def main():
         if filtered_data.empty:
             st.warning("No data available for the selected SKU and date range.")
         else:
-            # Plotting section
+            # Plotting section (using Streamlit's modern line chart)
             st.subheader(f"Performance for SKU: {selected_sku}")
-            fig, ax = plt.subplots(figsize=(10, 6))
-            ax.plot(filtered_data['date'], filtered_data['cost'], label='Cost', marker='o')
-            ax.plot(filtered_data['date'], filtered_data['NB2Bs'], label='NB2Bs', marker='s')
-            ax.plot(filtered_data['date'], filtered_data['nB2B CPA'], label='nB2B CPA', marker='^')
-            ax.set_title("Daily Performance Metrics")
-            ax.set_xlabel("Date")
-            ax.set_ylabel("Values")
-            ax.legend()
-            ax.grid(True)
-            
-            # Display plot
-            st.pyplot(fig)
+
+            # Streamlit's line_chart will automatically use the 'date' index as the x-axis
+            st.line_chart(
+                filtered_data.set_index('date')[['cost', 'NB2Bs', 'nB2B CPA']],  # Use 'date' as index
+                use_container_width=True  # Ensure the chart fits within the container
+            )
 
             # Display filtered data
             st.subheader("Filtered Data")
