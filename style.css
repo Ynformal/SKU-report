@@ -15,22 +15,21 @@ h1, h2, h3 {
     color: #16a085;
 }
 
-/* Streamlit widgets styling */
+/* Streamlit widgets styling (removing the blue background behind selection menus) */
 .stButton, .stSelectbox, .stFileUploader, .stSlider, .stDateInput {
-    background-color: #3498db;
-    color: white;
+    color: #333;
     font-size: 16px;
     border-radius: 5px;
-    border: none;
+    border: 1px solid #ccc;
     padding: 10px;
     margin: 10px 0;
     cursor: pointer;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: transparent;  /* Removed the blue background */
 }
 
 .stButton:hover, .stSelectbox:hover, .stFileUploader:hover, .stSlider:hover, .stDateInput:hover {
-    background-color: #2980b9;
-    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.15);
+    background-color: #f0f0f0;  /* Light gray background on hover */
 }
 
 .stButton:disabled, .stSelectbox:disabled, .stFileUploader:disabled, .stSlider:disabled, .stDateInput:disabled {
@@ -92,20 +91,23 @@ h1, h2, h3 {
     border-bottom: 1px solid #ddd;
 }
 
-/* Plot Styling */
+/* Modern Graph Styling */
 .stPlotlyChart, .stMatplotlibChart {
     margin-top: 20px;
 }
 
 .stPlotlyChart .plotly-graph-div {
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;  /* More rounded corners */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);  /* Smooth shadow for depth */
+    background-color: #fff;  /* White background for the plot */
+    padding: 15px;
 }
 
 .stMatplotlibChart .matplotlib-figure {
     background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;  /* Rounded corners for Matplotlib graphs */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);  /* Smooth shadow for depth */
+    padding: 15px;
 }
 
 /* Input box in sidebar and main window */
@@ -166,4 +168,3 @@ h1, h2, h3 {
     padding: 10px;
     margin-top: 10px;
 }
-
