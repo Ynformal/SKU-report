@@ -18,7 +18,7 @@ data.set_index('date', inplace=True)
 # Use Streamlit's line_chart method to plot the data
 st.title("SKU Performance Line Chart")
 
-# Customize line chart
+# Customize line chart for daily trends
 st.line_chart(
     data,  # Automatically uses the 'date' index as the x-axis
     y=["cost", "NB2Bs", "nB2B CPA"],  # Define columns for y-axis
@@ -104,8 +104,8 @@ def main():
         
         # Filter data based on SKU and date range
         filtered_data = data[(
-            data['SKU'] == selected_sku) &
-            (data['date'] >= pd.Timestamp(start_date)) &
+            data['SKU'] == selected_sku) & 
+            (data['date'] >= pd.Timestamp(start_date)) & 
             (data['date'] <= pd.Timestamp(end_date))
         ]
 
