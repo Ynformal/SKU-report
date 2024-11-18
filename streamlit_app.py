@@ -1,17 +1,16 @@
 import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
+import io
 
-# Load CSV data
-@st.cache_data  # Updated caching method
-def load_data(file_path):
+@st.cache_data
+def load_data(file):
     try:
-        # Try reading the file with UTF-8 encoding
-        data = pd.read_csv(file_path, encoding='utf-8')
+        # Read CSV from file-like object
+        data = pd.read_csv(io.StringIO(file.getvalue().decode('utf-8')))
     except UnicodeDecodeError:
-        # Fallback to Latin-1 encoding if UTF-8 fails
-        data = pd.read_csv(file_path, encoding='latin1')
-    # Ensure the 'date' column is in datetime format
+        # Fallback if the file isn't UTF-8 encoded
+        data = pd.read_csv(io.StringIO(file.getvalue().decode('latin1')))
     data['date'] = pd.to_datetime(data['date'])
     return data
 
