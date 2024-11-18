@@ -3,18 +3,23 @@ import streamlit as st
 import matplotlib.pyplot as plt
 
 # Load CSV data
-@st.cache
+@st.cache_data  # Updated caching method
 def load_data(file_path):
-    data = pd.read_csv(file_path)
+    try:
+        # Try reading the file with UTF-8 encoding
+        data = pd.read_csv(file_path, encoding='utf-8')
+    except UnicodeDecodeError:
+        # Fallback to Latin-1 encoding if UTF-8 fails
+        data = pd.read_csv(file_path, encoding='latin1')
     # Ensure the 'date' column is in datetime format
     data['date'] = pd.to_datetime(data['date'])
     return data
 
-# Define Streamlit dashboard
+# Main Streamlit app
 def main():
     st.title("Google Ads SKU Performance Dashboard")
     
-    # File upload section
+    # File uploader
     uploaded_file = st.file_uploader("Upload your CSV file", type=["csv"])
     if uploaded_file is not None:
         # Load the data
