@@ -75,14 +75,19 @@ def main():
                 legend_title_text="Metrics",
                 xaxis_title="Date",
                 yaxis_title="Values",
-                template="plotly_white"
+                template="plotly_white",
+                width=1200,  # Increased width
+                height=700   # Increased height
             )
             
             # Display plot
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, use_container_width=False)  # Disable auto-sizing to respect custom dimensions
 
+            # Filtered data table with hidden columns
             st.subheader("Filtered Data")
-            st.dataframe(filtered_data)
+            columns_to_hide = ['SKU']  # Example: Hide SKU column
+            visible_columns = [col for col in filtered_data.columns if col not in columns_to_hide]
+            st.dataframe(filtered_data[visible_columns])
     else:
         st.info("Please upload a CSV file to get started.")
 
