@@ -76,8 +76,8 @@ def main():
                 xaxis_title="Date",
                 yaxis_title="Values",
                 template="plotly_white",
-                width=700,  # Increased width
-                height=1200   # Increased height
+                width=1500,  # Increased width
+                height=700   # Increased height
             )
             
             # Display plot
