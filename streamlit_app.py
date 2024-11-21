@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 import io
-import plotly.express as px
+import plotly.graph_objects as go
 
 @st.cache_data
 def load_data(file):
@@ -61,27 +61,70 @@ def main():
         else:
             st.subheader(f"Performance for SKU: {selected_sku}")
             
-            # Plotly visualization
-            fig = px.line(
-                filtered_data,
-                x='date',
-                y=['cost', 'NB2Bs', 'nB2B CPA'],
-                labels={'value': 'Values', 'variable': 'Metrics'},
-                title="Daily Performance Metrics",
-                markers=True
+            # Dynamic Y-Axis Selection
+            metrics = st.sidebar.multiselect(
+                "Select metrics to display",
+                options=['cost', 'NB2Bs', 'nB2B CPA'],
+                default=['cost', 'NB2Bs']
             )
-            fig.update_traces(line_shape="spline")  # Smooth curves
+            right_y_axis_metric = st.sidebar.selectbox(
+                "Select metric for the right y-axis (optional)",
+                options=[None] + metrics,
+                index=0
+            )
+
+            if not metrics:
+                st.warning("Please select at least one metric to display.")
+                return
+            
+            # Ensure all days in range are shown
+            date_range = pd.date_range(start_date, end_date)
+            filtered_data = filtered_data.set_index('date').reindex(date_range).reset_index()
+            filtered_data.rename(columns={'index': 'date'}, inplace=True)
+
+            # Create the plot
+            fig = go.Figure()
+
+            # Add primary y-axis metrics
+            for metric in metrics:
+                if metric != right_y_axis_metric:
+                    fig.add_trace(go.Scatter(
+                        x=filtered_data['date'], 
+                        y=filtered_data[metric],
+                        mode='lines+markers',
+                        name=metric,
+                        yaxis="y1"
+                    ))
+
+            # Add right y-axis metric
+            if right_y_axis_metric:
+                fig.add_trace(go.Scatter(
+                    x=filtered_data['date'], 
+                    y=filtered_data[right_y_axis_metric],
+                    mode='lines+markers',
+                    name=f"{right_y_axis_metric} (Right Axis)",
+                    yaxis="y2"
+                ))
+
+            # Update layout for dual y-axes
             fig.update_layout(
-                legend_title_text="Metrics",
-                xaxis_title="Date",
-                yaxis_title="Values",
+                title="Daily Performance Metrics",
+                xaxis=dict(title="Date", tickformat="%d-%b"),
+                yaxis=dict(title="Primary Metrics", titlefont=dict(color="blue")),
+                yaxis2=dict(
+                    title="Secondary Metric",
+                    titlefont=dict(color="red"),
+                    overlaying="y",
+                    side="right"
+                ),
+                legend=dict(title="Metrics"),
                 template="plotly_white",
-                width=1500,  # Increased width
-                height=700   # Increased height
+                width=1500,
+                height=700
             )
             
             # Display plot
-            st.plotly_chart(fig, use_container_width=False)  # Disable auto-sizing to respect custom dimensions
+            st.plotly_chart(fig, use_container_width=False)
 
             # Filtered data table with hidden columns
             st.subheader("Filtered Data")
